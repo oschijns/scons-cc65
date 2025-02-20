@@ -40,7 +40,7 @@ env = Environment(
 
 	# Linker config
 	LINK = 'ld65',
-	LINKFLAGS = ['-C', 'config/nrom_32k_vert.cfg', '-Ln', 'config/labels.txt', '--dbgfile', 'config/dbg.txt'],
+	LINKFLAGS = ['-C', 'config/nrom_32k_vert.cfg', '-Ln', 'build/labels.txt', '--dbgfile', 'build/dbg.txt'],
 )
 
 env.Append(BUILDERS = {
@@ -49,8 +49,14 @@ env.Append(BUILDERS = {
     'Link': mos_linker
 })
 
-sources_c = Glob('src/*.c')
-sources_s = Glob('src/*.s')
+# Run the tools
+#tools = Glob('tool/*.py')
+import tool.make_src
+tool.make_src.main()
+
+# Get the sources both written and generated
+sources_c = Glob('src/*.c') + Glob('gen/*.c')
+sources_s = Glob('src/*.s') + Glob('gen/*.s')
 objects = []
 
 # Compile the sources to assembly scripts
